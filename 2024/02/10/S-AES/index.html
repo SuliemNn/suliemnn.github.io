@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>S-AES加密算法 | 适彼乐土的随想空间</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="本文将实现简单的AES加密算法，并进行简单的交叉测试，github链接：S-AES">
+<meta property="og:type" content="article">
+<meta property="og:title" content="S-AES加密算法">
+<meta property="og:url" content="https://suliemnn.github.io/2024/02/10/S-AES/index.html">
+<meta property="og:site_name" content="适彼乐土的随想空间">
+<meta property="og:description" content="本文将实现简单的AES加密算法，并进行简单的交叉测试，github链接：S-AES">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://suliemnn.github.io/.io//S-AES/total.png">
+<meta property="og:image" content="https://suliemnn.github.io/.io//Pasted%20image%2020240210005007.png">
+<meta property="og:image" content="https://suliemnn.github.io/.io//Pasted%20image%2020240210005922.png">
+<meta property="og:image" content="https://suliemnn.github.io/.io//Pasted%20image%2020240210004638.png">
+<meta property="og:image" content="https://suliemnn.github.io/.io//Pasted%20image%2020240210011101.png">
+<meta property="og:image" content="https://suliemnn.github.io/.io//Pasted%20image%2020240210011745.png">
+<meta property="og:image" content="https://suliemnn.github.io/.io//cloumnMix.png">
+<meta property="article:published_time" content="2024-02-09T16:18:58.000Z">
+<meta property="article:modified_time" content="2024-02-10T11:35:04.288Z">
+<meta property="article:author" content="适彼乐土">
+<meta property="article:tag" content="加密算法, 教学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://suliemnn.github.io/.io//S-AES/total.png">
+  
+    <link rel="alternate" href="/atom.xml" title="适彼乐土的随想空间" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">适彼乐土的随想空间</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://suliemnn.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-S-AES" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/02/10/S-AES/" class="article-date">
+  <time class="dt-published" datetime="2024-02-09T16:18:58.000Z" itemprop="datePublished">2024-02-10</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      S-AES加密算法
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <p>本文将实现简单的AES加密算法，并进行简单的交叉测试，github链接：<a target="_blank" rel="noopener" href="https://github.com/SuliemNn/S-AES">S-AES</a></p>
+<span id="more"></span>
+<h1 id="流程概述"><a href="#流程概述" class="headerlink" title="流程概述"></a>流程概述</h1><p><img src="/.io//S-AES/total.png"></p>
+<ol>
+<li><p><strong>密钥扩展（Key Expansion）</strong>：</p>
+<ul>
+<li>AES算法使用的密钥长度可以是128位、192位或256位。</li>
+<li>首先，根据密钥长度确定迭代次数，然后通过密钥扩展算法生成每一轮加密所需的子密钥。</li>
+</ul>
+</li>
+<li><p><strong>初始轮（Initial Round）</strong>：</p>
+<ul>
+<li>将明文分组与初始轮密钥（Round Key）进行XOR运算。</li>
+</ul>
+</li>
+<li><p><strong>轮运算（Rounds）</strong>：</p>
+<ul>
+<li>AES算法中的加密运算是由多轮执行的，每一轮都包含四个基本步骤：字节代换（SubBytes）、行移位（ShiftRows）、列混淆（MixColumns）和轮密钥加（AddRoundKey）。<ul>
+<li><strong>字节代换（SubBytes）</strong>：通过一个固定的S盒（Substitution Box）将每个字节替换为另一个字节。</li>
+<li><strong>行移位（ShiftRows）</strong>：对每一行进行循环移位。第一行不变，第二行向左移动一位，第三行向左移动两位，第四行向左移动三位。</li>
+<li><strong>列混淆（MixColumns）</strong>：将每一列视为多项式，然后与一个固定的矩阵进行乘法，结果取模AES的模多项式。</li>
+<li><strong>轮密钥加（AddRoundKey）</strong>：每一轮使用的轮密钥与状态矩阵进行逐比特的XOR运算。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>最终轮（Final Round）</strong>：</p>
+<ul>
+<li>在最后一轮中，省略列混淆步骤，只执行字节代换、行移位和轮密钥加。</li>
+</ul>
+</li>
+<li><p><strong>输出密文（Cipher Text）</strong>：</p>
+<ul>
+<li>经过多轮处理后的状态矩阵即为加密后的密文。</li>
+</ul>
+</li>
+</ol>
+<p><img src="/.io//Pasted%20image%2020240210005007.png"></p>
+<h1 id="S-AES的加密与解密"><a href="#S-AES的加密与解密" class="headerlink" title="S-AES的加密与解密"></a>S-AES的加密与解密</h1><h2 id="步骤拆解"><a href="#步骤拆解" class="headerlink" title="步骤拆解"></a>步骤拆解</h2><h3 id="定义初始常量"><a href="#定义初始常量" class="headerlink" title="定义初始常量"></a>定义初始常量</h3><p>初始常量不同，相同的key得到的密钥也不同，所以我们需要先规定一个初始常量。这些常量均可以被公开，而不会影响到密码的安全性。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#轮常数  </span></span><br><span class="line">cons1=<span class="string">&quot;10000000&quot;</span>  </span><br><span class="line">cons2=<span class="string">&quot;00110000&quot;</span>  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 置换盒  </span></span><br><span class="line">S_Box = [[<span class="string">&#x27;9&#x27;</span>, <span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;A&#x27;</span>, <span class="string">&#x27;B&#x27;</span>],  </span><br><span class="line">         [<span class="string">&#x27;D&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;5&#x27;</span>],  </span><br><span class="line">         [<span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;3&#x27;</span>],  </span><br><span class="line">         [<span class="string">&#x27;C&#x27;</span>, <span class="string">&#x27;E&#x27;</span>, <span class="string">&#x27;F&#x27;</span>, <span class="string">&#x27;7&#x27;</span>]]  </span><br><span class="line"><span class="comment"># 逆置换盒  </span></span><br><span class="line">S_deBox = [[<span class="string">&#x27;A&#x27;</span>, <span class="string">&#x27;5&#x27;</span>, <span class="string">&#x27;9&#x27;</span>, <span class="string">&#x27;B&#x27;</span>],  </span><br><span class="line">           [<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;7&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;F&#x27;</span>],  </span><br><span class="line">           [<span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;3&#x27;</span>],  </span><br><span class="line">           [<span class="string">&#x27;C&#x27;</span>, <span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;D&#x27;</span>, <span class="string">&#x27;E&#x27;</span>]]  </span><br><span class="line">  </span><br><span class="line">mixMatrix = [[<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;4&#x27;</span>], [<span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;1&#x27;</span>]]  </span><br><span class="line">deMixMatrix = [[<span class="string">&#x27;9&#x27;</span>, <span class="string">&#x27;2&#x27;</span>], [<span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;9&#x27;</span>]]</span><br></pre></td></tr></table></figure>
+
+<h3 id="密钥扩展"><a href="#密钥扩展" class="headerlink" title="密钥扩展"></a>密钥扩展</h3><p>原来的密钥需要生成多对子密钥，分别作为各轮加密步骤的子密钥。<br><img src="/.io//Pasted%20image%2020240210005922.png"><br>&#x3D;&#x3D;将16位密钥分为左右两部分，每一部分各8位。记原始密钥为第0个密钥。&#x3D;&#x3D;</p>
+<p>在计算第<code>i</code>个密钥时，首先将第<code>i-1</code>个密钥的右半部分（8位）进行左循环移位，即将第<code>i-1</code>个密钥的右半部分的左右4位进行交换，再将左循环移位后的第<code>i-1</code>个密钥的右半部分（8位）进行S盒置换。</p>
+<p>进行S盒置换后需要与轮常数进行异或，S-AES的轮常数定义为：第一轮加密的轮常数是【1000 0000】，第二轮加密的轮常数是【0011 0000】。</p>
+<p>上述步骤就是示意图中函数g的步骤，将第i-1个密钥的右半部分（8位）执行完上述步骤后得到g(第i-1个密钥的右半部分)，将其与第i-1个密钥的左半部分（8位）进行异或得到第i个密钥的左半部分。</p>
+<p>第i个密钥的右半部分由第i个密钥的左半部分与第i-1个密钥的右半部分进行异或得到。</p>
+<p>具体实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#输入初始密钥，输出扩展之后的密钥  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">expandKey</span>(<span class="params">key,cons,Box</span>):  </span><br><span class="line">    rightKey = key[<span class="number">8</span>:]  </span><br><span class="line">    leftKey = key[<span class="number">0</span>:<span class="number">8</span>]  </span><br><span class="line">  </span><br><span class="line">    <span class="comment"># 左边的密钥由右半部分g(i-1)与左半部分异或得到  </span></span><br><span class="line">    resLeft=xor(G(rightKey,cons,Box),leftKey)  </span><br><span class="line">  </span><br><span class="line">    <span class="comment"># 第i个密钥的右半部分由第i个密钥的左半部分与第i-1个密钥的右半部分进行异或得到  </span></span><br><span class="line">    resRight=xor(resLeft,rightKey)  </span><br><span class="line">    <span class="keyword">return</span> resLeft+resRight</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#密钥扩展的g函数，  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">G</span>(<span class="params">byteText,cons,Box</span>):  </span><br><span class="line">    <span class="comment">#第一步进行左循环移位，将左右两个进行互换  </span></span><br><span class="line">    resText=byteText[<span class="number">4</span>:]+byteText[<span class="number">0</span>:<span class="number">4</span>]  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#第二步进行S盒替代  </span></span><br><span class="line">    index = <span class="number">0</span>  </span><br><span class="line">    result = <span class="string">&quot;&quot;</span>  </span><br><span class="line">    <span class="keyword">while</span> index &lt; <span class="built_in">len</span>(resText):  </span><br><span class="line">        i = <span class="built_in">int</span>(resText[index:index + <span class="number">2</span>], <span class="number">2</span>)  </span><br><span class="line">        j = <span class="built_in">int</span>(resText[index + <span class="number">2</span>:index + <span class="number">4</span>], <span class="number">2</span>)  </span><br><span class="line">        result += Box[i][j]  </span><br><span class="line">        index += <span class="number">4</span>  </span><br><span class="line">  </span><br><span class="line">    <span class="comment"># 十六进制转换二进制  </span></span><br><span class="line">    result = <span class="built_in">bin</span>(<span class="built_in">int</span>(result, <span class="number">16</span>))[<span class="number">2</span>:].zfill(<span class="number">8</span>)  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#第三步，与轮常数进行异或  </span></span><br><span class="line">    result=xor(result,cons)  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<p>测试：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#密钥扩展确认  </span></span><br><span class="line">cyberText=<span class="string">&quot;1010011100111011&quot;</span>  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;密钥扩展确认&quot;</span>)  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;第一轮加密：&quot;</span> + expandKey(cyberText,cons1,S_Box))  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;第二轮加密：&quot;</span> + expandKey(expandKey(cyberText,cons1,S_Box), cons2, S_Box))</span><br></pre></td></tr></table></figure>
+
+<p>结果如下：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">密钥扩展确认</span><br><span class="line">第一轮加密：0001110000100111</span><br><span class="line">第二轮加密：0111011001010001</span><br></pre></td></tr></table></figure>
+<h3 id="轮密钥加"><a href="#轮密钥加" class="headerlink" title="轮密钥加"></a>轮密钥加</h3><p>第零轮加密，也就是对状态矩阵与密钥进行逐位的异或操作</p>
+<p><img src="/.io//Pasted%20image%2020240210004638.png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 轮密钥加密：逐位进行异或操作 输入两个二进制字符串，输出结果=&gt;二进制字符串  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">xor</span>(<span class="params">text1, text2</span>):  </span><br><span class="line">    i = <span class="number">0</span>  </span><br><span class="line">    restext = <span class="string">&quot;&quot;</span>  </span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(text1):  </span><br><span class="line">        <span class="keyword">if</span> text1[i] == text2[i]:  </span><br><span class="line">            restext += <span class="string">&quot;0&quot;</span>  </span><br><span class="line">        <span class="keyword">else</span>:  </span><br><span class="line">            restext += <span class="string">&quot;1&quot;</span>  </span><br><span class="line">        i += <span class="number">1</span>  </span><br><span class="line">    <span class="keyword">return</span> restext</span><br></pre></td></tr></table></figure>
+
+<h3 id="半字节替代"><a href="#半字节替代" class="headerlink" title="半字节替代"></a>半字节替代</h3><p><img src="/.io//Pasted%20image%2020240210011101.png"><br>代码实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 半字节替代，传入二进制字符串，返回二进制字符串  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">halfByteReplace</span>(<span class="params">text, Box</span>):  </span><br><span class="line">    index = <span class="number">0</span>  </span><br><span class="line">    result = <span class="string">&quot;&quot;</span>  </span><br><span class="line">    <span class="keyword">while</span> index &lt; <span class="built_in">len</span>(text):  </span><br><span class="line">        i = <span class="built_in">int</span>(text[index:index + <span class="number">2</span>], <span class="number">2</span>)  </span><br><span class="line">        j = <span class="built_in">int</span>(text[index + <span class="number">2</span>:index + <span class="number">4</span>], <span class="number">2</span>)  </span><br><span class="line">        result += Box[i][j]  </span><br><span class="line">        index += <span class="number">4</span>  </span><br><span class="line">  </span><br><span class="line">    <span class="comment"># 十六进制转换二进制  </span></span><br><span class="line">    result = <span class="built_in">bin</span>(<span class="built_in">int</span>(result, <span class="number">16</span>))[<span class="number">2</span>:].zfill(<span class="number">16</span>)  </span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
+<p>因为在这里用到了置换盒，我们需要保证正置换盒和逆置换盒之间是匹配的，所以需要进行测试：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 置换盒测试程序  </span></span><br><span class="line">plainText = <span class="built_in">bin</span>(<span class="built_in">int</span>(<span class="string">&quot;8A1C&quot;</span>, <span class="number">16</span>))[<span class="number">2</span>:]  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;置换盒测试&quot;</span>)  </span><br><span class="line"><span class="built_in">print</span>(plainText)  </span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(<span class="built_in">int</span>(halfByteReplace(plainText, S_Box), <span class="number">2</span>)))  </span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(<span class="built_in">int</span>(halfByteReplace(halfByteReplace(plainText, S_Box), S_deBox), <span class="number">2</span>)))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">置换盒测试</span><br><span class="line">1000101000011100</span><br><span class="line">0x604c</span><br><span class="line">0x8a1c</span><br></pre></td></tr></table></figure>
+<p>发现置换盒确实可逆，测试通过！！！</p>
+<h3 id="行移位"><a href="#行移位" class="headerlink" title="行移位"></a>行移位</h3><p><img src="/.io//Pasted%20image%2020240210011745.png"><br>这个很简单，直接上代码实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 左循环移位，传入二进制字符串，返回二进制字符串  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">left_shift</span>(<span class="params">text</span>):  </span><br><span class="line">    stateMartix = toStateMartix(text)  </span><br><span class="line">  </span><br><span class="line">    <span class="comment"># 交换  </span></span><br><span class="line">    tem = stateMartix[<span class="number">1</span>][<span class="number">0</span>]  </span><br><span class="line">    stateMartix[<span class="number">1</span>][<span class="number">0</span>] = stateMartix[<span class="number">1</span>][<span class="number">1</span>]  </span><br><span class="line">    stateMartix[<span class="number">1</span>][<span class="number">1</span>] = tem  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> reStateMartix(stateMartix)</span><br></pre></td></tr></table></figure>
+<p>测试程序如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 行移位测试程序  </span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;行移位测试&quot;</span>)  </span><br><span class="line">resText = halfByteReplace(plainText, S_Box)  </span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(<span class="built_in">int</span>(left_shift(resText), <span class="number">2</span>)))</span><br></pre></td></tr></table></figure>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">行移位测试</span><br><span class="line">0x6c40</span><br></pre></td></tr></table></figure>
+
+<h3 id="列混淆"><a href="#列混淆" class="headerlink" title="列混淆"></a>列混淆</h3><p><img src="/.io//cloumnMix.png"><br>代码实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">gf_add</span>(<span class="params">a, b</span>):  </span><br><span class="line">    <span class="keyword">return</span> a ^ b  <span class="comment"># 二进制数的异或运算即为GF(2^4)的加法运算  </span></span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">gf_multiply</span>(<span class="params">a, b</span>):  </span><br><span class="line">    result = <span class="number">0</span>  </span><br><span class="line">    <span class="keyword">while</span> b != <span class="number">0</span>:  </span><br><span class="line">        <span class="keyword">if</span> b &amp; <span class="number">1</span>:  </span><br><span class="line">            result ^= a  </span><br><span class="line">        a &lt;&lt;= <span class="number">1</span>  </span><br><span class="line">        <span class="keyword">if</span> a &amp; <span class="number">0x10</span>:  </span><br><span class="line">            a ^= <span class="number">0b10011</span>  <span class="comment"># GF(2^4)的乘法多项式 x^4 + x + 1        b &gt;&gt;= 1  </span></span><br><span class="line">    <span class="keyword">return</span> result % <span class="number">16</span>  <span class="comment"># 结果需要模上16，因为GF(2^4)的元素是4位二进制数  </span></span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 列混淆函数，传入一个列混淆矩阵和一个二进制字符串。返回一个二进制字符串  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">colMix</span>(<span class="params">colMartix, byteText</span>):  </span><br><span class="line">    myMartix = toStateMartix(byteText)  </span><br><span class="line">    resMartix = [[<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>], [<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>]]  </span><br><span class="line">    resMartix[<span class="number">0</span>][<span class="number">0</span>] = <span class="built_in">bin</span>(gf_add(gf_multiply(<span class="built_in">int</span>(colMartix[<span class="number">0</span>][<span class="number">0</span>], <span class="number">16</span>), <span class="built_in">int</span>(myMartix[<span class="number">0</span>][<span class="number">0</span>], <span class="number">2</span>)),  </span><br><span class="line">                                 gf_multiply(<span class="built_in">int</span>(colMartix[<span class="number">0</span>][<span class="number">1</span>], <span class="number">16</span>), <span class="built_in">int</span>(myMartix[<span class="number">1</span>][<span class="number">0</span>], <span class="number">2</span>))))[<span class="number">2</span>:].zfill(<span class="number">4</span>)  </span><br><span class="line">  </span><br><span class="line">    resMartix[<span class="number">0</span>][<span class="number">1</span>] = <span class="built_in">bin</span>(gf_add(gf_multiply(<span class="built_in">int</span>(colMartix[<span class="number">0</span>][<span class="number">0</span>], <span class="number">16</span>), <span class="built_in">int</span>(myMartix[<span class="number">0</span>][<span class="number">1</span>], <span class="number">2</span>)),  </span><br><span class="line">                                 gf_multiply(<span class="built_in">int</span>(colMartix[<span class="number">0</span>][<span class="number">1</span>], <span class="number">16</span>), <span class="built_in">int</span>(myMartix[<span class="number">1</span>][<span class="number">1</span>], <span class="number">2</span>))))[<span class="number">2</span>:].zfill(<span class="number">4</span>)  </span><br><span class="line">  </span><br><span class="line">    resMartix[<span class="number">1</span>][<span class="number">0</span>] = <span class="built_in">bin</span>(gf_add(gf_multiply(<span class="built_in">int</span>(colMartix[<span class="number">1</span>][<span class="number">0</span>], <span class="number">16</span>), <span class="built_in">int</span>(myMartix[<span class="number">0</span>][<span class="number">0</span>], <span class="number">2</span>)),  </span><br><span class="line">                                 gf_multiply(<span class="built_in">int</span>(colMartix[<span class="number">1</span>][<span class="number">1</span>], <span class="number">16</span>), <span class="built_in">int</span>(myMartix[<span class="number">1</span>][<span class="number">0</span>], <span class="number">2</span>))))[<span class="number">2</span>:].zfill(<span class="number">4</span>)  </span><br><span class="line">  </span><br><span class="line">    resMartix[<span class="number">1</span>][<span class="number">1</span>] = <span class="built_in">bin</span>(gf_add(gf_multiply(<span class="built_in">int</span>(colMartix[<span class="number">1</span>][<span class="number">0</span>], <span class="number">16</span>), <span class="built_in">int</span>(myMartix[<span class="number">0</span>][<span class="number">1</span>], <span class="number">2</span>)),  </span><br><span class="line">                                 gf_multiply(<span class="built_in">int</span>(colMartix[<span class="number">1</span>][<span class="number">1</span>], <span class="number">16</span>), <span class="built_in">int</span>(myMartix[<span class="number">1</span>][<span class="number">1</span>], <span class="number">2</span>))))[<span class="number">2</span>:].zfill(<span class="number">4</span>)  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> reStateMartix(resMartix)</span><br></pre></td></tr></table></figure>
+
+<p>测试程序如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#列混淆函数确认  </span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;列混淆函数确认&quot;</span>)  </span><br><span class="line">resText=left_shift(resText)  </span><br><span class="line">resText2 = colMix(mixMatrix,resText)  </span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(<span class="built_in">int</span>(resText2,<span class="number">2</span>)))  </span><br><span class="line">resText3 = colMix(deMixMatrix,resText2)  </span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(<span class="built_in">int</span>(resText3,<span class="number">2</span>)))</span><br></pre></td></tr></table></figure>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">列混淆函数确认</span><br><span class="line">0x3743</span><br><span class="line">0x6c40</span><br></pre></td></tr></table></figure>
+
+<h2 id="加密"><a href="#加密" class="headerlink" title="加密"></a>加密</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">enCrypt</span>(<span class="params">plainText, key</span>):  </span><br><span class="line">  </span><br><span class="line">    plainText=<span class="built_in">bin</span>(<span class="built_in">int</span>(plainText,<span class="number">2</span>))[<span class="number">2</span>:].zfill(<span class="number">16</span>)  </span><br><span class="line">    key = <span class="built_in">bin</span>(<span class="built_in">int</span>(key, <span class="number">2</span>))[<span class="number">2</span>:].zfill(<span class="number">16</span>)  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#进行密钥扩展  </span></span><br><span class="line">    keyList=[key, expandKey(key, cons1, S_Box), expandKey(expandKey(key, cons1, S_Box), cons2, S_Box)]  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#第0轮加密：将明文与初始密文进行异或  </span></span><br><span class="line">    temText=xor(plainText, keyList[<span class="number">0</span>])  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#第1轮加密  </span></span><br><span class="line">  </span><br><span class="line">    <span class="comment">#1.1 半字节代替：对temText进行半字节替代  </span></span><br><span class="line">    temText=halfByteReplace(temText,S_Box)  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#1.2 行位移  </span></span><br><span class="line">    temText=left_shift(temText)  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#1.3 列混淆  </span></span><br><span class="line">    temText=colMix(mixMatrix,temText)  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#1.3 轮密钥加密  </span></span><br><span class="line">    temText=xor(temText, keyList[<span class="number">1</span>])  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#第2轮加密  </span></span><br><span class="line">  </span><br><span class="line">    <span class="comment">#2.1 半字节替代  </span></span><br><span class="line">    temText=halfByteReplace(temText,S_Box)  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#2.2 行位移  </span></span><br><span class="line">    temText=left_shift(temText)  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#2.3 轮密钥加  </span></span><br><span class="line">    temText=xor(temText, keyList[<span class="number">2</span>])  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> temText</span><br></pre></td></tr></table></figure>
+
+<h2 id="解密"><a href="#解密" class="headerlink" title="解密"></a>解密</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">deCrypt</span>(<span class="params">cyberText,key</span>):  </span><br><span class="line">  </span><br><span class="line">    cyberText=<span class="built_in">bin</span>(<span class="built_in">int</span>(cyberText,<span class="number">2</span>))[<span class="number">2</span>:].zfill(<span class="number">16</span>)  </span><br><span class="line">    key = <span class="built_in">bin</span>(<span class="built_in">int</span>(key, <span class="number">2</span>))[<span class="number">2</span>:].zfill(<span class="number">16</span>)  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#将key进行扩展  </span></span><br><span class="line">    keyList = [key, expandKey(key, cons1, S_Box), expandKey(expandKey(key, cons1, S_Box), cons2, S_Box)]  </span><br><span class="line">  </span><br><span class="line">    <span class="comment"># 第0轮解密  </span></span><br><span class="line">    <span class="comment"># 密钥加  </span></span><br><span class="line">    temText=xor(cyberText,keyList[<span class="number">2</span>])  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#第一轮解密  </span></span><br><span class="line">  </span><br><span class="line">    <span class="comment">#1.1 逆行移位  </span></span><br><span class="line">    temText=left_shift(temText)  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#1.2 逆半字节替代  </span></span><br><span class="line">    temText=halfByteReplace(temText,S_deBox)  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#1.3 轮密钥加  </span></span><br><span class="line">    temText=xor(temText,keyList[<span class="number">1</span>])  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#1.4 逆列混淆  </span></span><br><span class="line">    temText=colMix(deMixMatrix,temText)  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">    <span class="comment">#第二轮解密  </span></span><br><span class="line">  </span><br><span class="line">    <span class="comment">#2.1 逆行移位  </span></span><br><span class="line">    temText=left_shift(temText)  </span><br><span class="line">  </span><br><span class="line">    <span class="comment"># 2.2 逆半字节替代  </span></span><br><span class="line">    temText=halfByteReplace(temText,S_deBox)  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">    <span class="comment"># 2.3 轮密钥加  </span></span><br><span class="line">    temText=xor(temText,keyList[<span class="number">0</span>])  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> temText</span><br></pre></td></tr></table></figure>
+<p>测试函数：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#加密确认  </span></span><br><span class="line"><span class="comment">#1101111000001101  </span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;加密确认&quot;</span>)  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;明文为：0110111101101011&quot;</span>)  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;密文为：&quot;</span> + enCrypt(plainText=<span class="string">&quot;0110111101101011&quot;</span>, key=<span class="string">&quot;1010011100111011&quot;</span>))  </span><br><span class="line">testcyber=enCrypt(plainText=<span class="string">&quot;1100110000110011&quot;</span>, key=<span class="string">&quot;1010011100111011&quot;</span>)  </span><br><span class="line"><span class="comment">#mystr=&quot;0000 0111 0011 1000&quot;  </span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;解密：&quot;</span>+deCrypt(testcyber,key=<span class="string">&quot;1010011100111011&quot;</span>))</span><br></pre></td></tr></table></figure>
+<p>结果如下：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">加密确认</span><br><span class="line">明文为：0110111101101011</span><br><span class="line">密文为：0000011100111000</span><br><span class="line">解密：1100110000110011</span><br></pre></td></tr></table></figure>
+<h1 id="加密算法扩展"><a href="#加密算法扩展" class="headerlink" title="加密算法扩展"></a>加密算法扩展</h1><h2 id="ASCII码扩展"><a href="#ASCII码扩展" class="headerlink" title="ASCII码扩展"></a>ASCII码扩展</h2><p>该功能要求对ASCII码部分进行扩展，要求将ASCII码表中的字符进行加密解密。实现逻辑很简单，就是将字符按照ASCII码表转换为二进制数，然后再进行AES加密。</p>
+<p>代码实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ascii 编码的实现:传入一个字符串和密钥，返回密文数组  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">asciiEnCrypt</span>(<span class="params"><span class="built_in">str</span>,key</span>):  </span><br><span class="line">    <span class="comment">#把一个str转换为ascList  </span></span><br><span class="line">    ascList=[]  </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">str</span>:  </span><br><span class="line">        ascList.append(<span class="built_in">ord</span>(i))  </span><br><span class="line">  </span><br><span class="line">    cyberList=[]  </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> ascList:  </span><br><span class="line">        tem=<span class="built_in">bin</span>(i)[<span class="number">2</span>:]  </span><br><span class="line">        cyberList.append(enCrypt(tem,key))  </span><br><span class="line">    <span class="keyword">return</span> cyberList  </span><br><span class="line">  </span><br><span class="line"><span class="comment">#传入一个cyberList，返回对应的字符串数组  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">asciiDeCrypt</span>(<span class="params">cyberList,key</span>):  </span><br><span class="line">    ascList=[]  </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> cyberList:  </span><br><span class="line">        ascList.append(<span class="built_in">int</span>(deCrypt(i,key),<span class="number">2</span>))  </span><br><span class="line">  </span><br><span class="line">    strLst=[]  </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> ascList:  </span><br><span class="line">        strLst.append(<span class="built_in">chr</span>(i))  </span><br><span class="line">    <span class="keyword">return</span> lstToStr(strLst)  </span><br><span class="line">  </span><br><span class="line"><span class="comment">#把字符串数组转换为字符串  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">lstToStr</span>(<span class="params">lst</span>):  </span><br><span class="line">    <span class="built_in">str</span>=<span class="string">&quot;&quot;</span>  </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> lst:  </span><br><span class="line">        <span class="built_in">str</span>+=i  </span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">str</span></span><br></pre></td></tr></table></figure>
+
+<p>测试如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#ascii扩展  </span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;ascii扩展&quot;</span>)  </span><br><span class="line"><span class="built_in">str</span>=<span class="string">&quot;Hello world!!!&quot;</span>  </span><br><span class="line">cyberlst=asciiEnCrypt(<span class="built_in">str</span>, key=<span class="string">&quot;1010011100111011&quot;</span>)  </span><br><span class="line"><span class="built_in">print</span>(cyberlst)  </span><br><span class="line"><span class="built_in">print</span>(asciiDeCrypt(cyberlst,key=<span class="string">&quot;1010011100111011&quot;</span>))</span><br></pre></td></tr></table></figure>
+
+<p>测试结果如下：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">ascii扩展</span><br><span class="line">[&#x27;0100011111000100&#x27;, &#x27;0001111010001010&#x27;, &#x27;1111111010000011&#x27;, &#x27;1111111010000011&#x27;, &#x27;1110111010000101&#x27;, &#x27;1001001000010110&#x27;, &#x27;1010110100111000&#x27;, &#x27;1110111010000101&#x27;, &#x27;0101110100111110&#x27;, &#x27;1111111010000011&#x27;, &#x27;1000111010000010&#x27;, &#x27;0011001000011101&#x27;, &#x27;0011001000011101&#x27;, &#x27;0011001000011101&#x27;]</span><br><span class="line">Hello world!!!</span><br></pre></td></tr></table></figure>
+
+<h2 id="暴力破解"><a href="#暴力破解" class="headerlink" title="暴力破解"></a>暴力破解</h2><p>场景：给出一对或多对明文密文对，要求破解出所有可能的密钥<br>实现逻辑，暴力循环测试，直到成功将明文加密成相同的密文</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#暴力破解函数,输入明文和密文，返回其对应的key数组  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">breakOut</span>(<span class="params">plainText,cyberText</span>):  </span><br><span class="line">    start_time=time.time()  </span><br><span class="line">    key=<span class="number">0</span>  </span><br><span class="line">    keyLst=[]  </span><br><span class="line">    <span class="keyword">while</span> key&lt;<span class="number">2</span>**<span class="number">16</span>-<span class="number">1</span>:  </span><br><span class="line">        myCyber=enCrypt(plainText,<span class="built_in">bin</span>(key)[<span class="number">2</span>:])  </span><br><span class="line">        <span class="keyword">if</span> myCyber == cyberText:  </span><br><span class="line">            keyLst.append(key)  </span><br><span class="line">        key+=<span class="number">1</span>  </span><br><span class="line">    newkey=[]  </span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> keyLst:  </span><br><span class="line">        newkey.append(<span class="built_in">bin</span>(i)[<span class="number">2</span>:])  </span><br><span class="line">    <span class="keyword">return</span> newkey,time.time()-start_time</span><br></pre></td></tr></table></figure>
+<p>测试程序：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#暴力破解  </span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;暴力破解&quot;</span>)  </span><br><span class="line"><span class="built_in">print</span>(breakOut(<span class="string">&quot;0110111101101011&quot;</span>,<span class="string">&quot;0000011100111000&quot;</span>))</span><br></pre></td></tr></table></figure>
+<p>预期结果：</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">暴力破解</span><br><span class="line">([&#x27;1010010001011111&#x27;, &#x27;1010011100111011&#x27;], 8.70831561088562)</span><br></pre></td></tr></table></figure>
+<h2 id="多重加密"><a href="#多重加密" class="headerlink" title="多重加密"></a>多重加密</h2><p>用多个key对明文进行加密</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#多重加密  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">multiplyEnCrypt</span>(<span class="params">plainText,key</span>):  </span><br><span class="line">    level=<span class="built_in">len</span>(key)/<span class="number">16</span>  </span><br><span class="line">    count=<span class="number">0</span>  </span><br><span class="line">    cyberText=plainText  </span><br><span class="line">    <span class="keyword">while</span> count&lt;level:  </span><br><span class="line">        temkey=key[<span class="number">0</span>:<span class="number">16</span>]  </span><br><span class="line">        key=key[<span class="number">16</span>:]  </span><br><span class="line">        cyberText=enCrypt(cyberText,temkey)  </span><br><span class="line">        count+=<span class="number">1</span>  </span><br><span class="line">    <span class="keyword">return</span> cyberText  </span><br><span class="line">  </span><br><span class="line"><span class="comment">#多重解密  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">multiplyDeCrypt</span>(<span class="params">cyberText,key</span>):  </span><br><span class="line">    level = <span class="built_in">len</span>(key) / <span class="number">16</span>  </span><br><span class="line">    count=<span class="number">0</span>  </span><br><span class="line">    plainText=cyberText  </span><br><span class="line">    <span class="keyword">while</span> count&lt;level:  </span><br><span class="line">        temkey=key[-<span class="number">16</span>:]  </span><br><span class="line">        key=key[<span class="number">0</span>:-<span class="number">16</span>]  </span><br><span class="line">        plainText=deCrypt(plainText,temkey)  </span><br><span class="line">        count+=<span class="number">1</span>  </span><br><span class="line">    <span class="keyword">return</span> plainText</span><br></pre></td></tr></table></figure>
+<p>测试函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#多重加密  </span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;多重加密&quot;</span>)  </span><br><span class="line">mulcyber=multiplyEnCrypt(<span class="string">&quot;0110111101101011&quot;</span>,<span class="string">&quot;10100111001110110110111101101011&quot;</span>)  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;加密后的密文为：&quot;</span>+mulcyber)  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;解密后的明文为：&quot;</span>+multiplyDeCrypt(mulcyber,<span class="string">&quot;10100111001110110110111101101011&quot;</span>))</span><br></pre></td></tr></table></figure>
+<p>预期结果</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">多重加密</span><br><span class="line">加密后的密文为：0101101111011000</span><br><span class="line">解密后的明文为：0110111101101011</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://suliemnn.github.io/2024/02/10/S-AES/" data-id="clsg0a94v0000kkvodqnp97c2" data-title="S-AES加密算法" class="article-share-link"><span class="fa fa-share">分享</span></a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E6%95%99%E5%AD%A6/" rel="tag">加密算法, 教学</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2024/02/08/My-First-Post/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">后一篇</strong>
+      <div class="article-nav-title">这是我的第一篇博客！！！</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E6%95%99%E5%AD%A6/" rel="tag">加密算法, 教学</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E6%95%99%E5%AD%A6/" style="font-size: 10px;">加密算法, 教学</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">二月 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/02/10/S-AES/">S-AES加密算法</a>
+          </li>
+        
+          <li>
+            <a href="/2024/02/08/My-First-Post/">这是我的第一篇博客！！！</a>
+          </li>
+        
+          <li>
+            <a href="/2024/02/08/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 适彼乐土<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
