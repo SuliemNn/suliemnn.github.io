@@ -1,114 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  
-  
-  <title>S-AES加密算法 | 适彼乐土的随想空间</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="本文将实现简单的AES加密算法，并进行简单的交叉测试，github链接：S-AES">
-<meta property="og:type" content="article">
-<meta property="og:title" content="S-AES加密算法">
-<meta property="og:url" content="https://suliemnn.github.io/2024/02/10/S-AES/index.html">
-<meta property="og:site_name" content="适彼乐土的随想空间">
-<meta property="og:description" content="本文将实现简单的AES加密算法，并进行简单的交叉测试，github链接：S-AES">
-<meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://suliemnn.github.io/.io//S-AES/total.png">
-<meta property="og:image" content="https://suliemnn.github.io/.io//Pasted%20image%2020240210005007.png">
-<meta property="og:image" content="https://suliemnn.github.io/.io//Pasted%20image%2020240210005922.png">
-<meta property="og:image" content="https://suliemnn.github.io/.io//Pasted%20image%2020240210004638.png">
-<meta property="og:image" content="https://suliemnn.github.io/.io//Pasted%20image%2020240210011101.png">
-<meta property="og:image" content="https://suliemnn.github.io/.io//Pasted%20image%2020240210011745.png">
-<meta property="og:image" content="https://suliemnn.github.io/.io//cloumnMix.png">
-<meta property="article:published_time" content="2024-02-09T16:18:58.000Z">
-<meta property="article:modified_time" content="2024-02-10T11:35:04.288Z">
-<meta property="article:author" content="适彼乐土">
-<meta property="article:tag" content="加密算法, 教学">
-<meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://suliemnn.github.io/.io//S-AES/total.png">
-  
-    <link rel="alternate" href="/atom.xml" title="适彼乐土的随想空间" type="application/atom+xml">
-  
-  
-    <link rel="shortcut icon" href="/favicon.png">
-  
-  
-    
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>S-AES加密算法 - 适彼乐土的随想空间</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="适彼乐土的随想空间"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="适彼乐土的随想空间"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="本文将实现简单的AES加密算法，并进行简单的交叉测试，github链接：S-AES"><meta property="og:type" content="blog"><meta property="og:title" content="S-AES加密算法"><meta property="og:url" content="https://suliemnn.github.io/S-AES/"><meta property="og:site_name" content="适彼乐土的随想空间"><meta property="og:description" content="本文将实现简单的AES加密算法，并进行简单的交叉测试，github链接：S-AES"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://suliemnn.github.io/assets/S-AES/cover.png"><meta property="article:published_time" content="2024-02-09T16:18:58.000Z"><meta property="article:modified_time" content="2024-02-10T15:45:43.812Z"><meta property="article:author" content="适彼乐土"><meta property="article:tag" content="信息安全"><meta property="article:tag" content="代码复现"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://suliemnn.github.io/assets/S-AES/cover.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://suliemnn.github.io/S-AES/"},"headline":"S-AES加密算法","image":["https://suliemnn.github.io/assets/S-AES/cover.png"],"datePublished":"2024-02-09T16:18:58.000Z","dateModified":"2024-02-10T15:45:43.812Z","author":{"@type":"Person","name":"适彼乐土"},"publisher":{"@type":"Organization","name":"适彼乐土的随想空间","logo":{"@type":"ImageObject","url":"https://suliemnn.github.io/img/logo.svg"}},"description":"本文将实现简单的AES加密算法，并进行简单的交叉测试，github链接：S-AES"}</script><link rel="canonical" href="https://suliemnn.github.io/S-AES/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
 
-  
-  
-<link rel="stylesheet" href="/css/style.css">
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
 
-  
-    
-<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
 
-  
-  
-<meta name="generator" content="Hexo 6.3.0"></head>
-
-<body>
-  <div id="container">
-    <div id="wrap">
-      <header id="header">
-  <div id="banner"></div>
-  <div id="header-outer" class="outer">
-    <div id="header-title" class="inner">
-      <h1 id="logo-wrap">
-        <a href="/" id="logo">适彼乐土的随想空间</a>
-      </h1>
-      
-    </div>
-    <div id="header-inner" class="inner">
-      <nav id="main-nav">
-        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
-        
-          <a class="main-nav-link" href="/">Home</a>
-        
-          <a class="main-nav-link" href="/archives">Archives</a>
-        
-      </nav>
-      <nav id="sub-nav">
-        
-        
-          <a class="nav-icon" href="/atom.xml" title="RSS 订阅"><span class="fa fa-rss"></span></a>
-        
-        <a class="nav-icon nav-search-btn" title="搜索"><span class="fa fa-search"></span></a>
-      </nav>
-      <div id="search-form-wrap">
-        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="搜索"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://suliemnn.github.io"></form>
-      </div>
-    </div>
-  </div>
-</header>
-
-      <div class="outer">
-        <section id="main"><article id="post-S-AES" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2024/02/10/S-AES/" class="article-date">
-  <time class="dt-published" datetime="2024-02-09T16:18:58.000Z" itemprop="datePublished">2024-02-10</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 class="p-name article-title" itemprop="headline name">
-      S-AES加密算法
-    </h1>
-  
-
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <p>本文将实现简单的AES加密算法，并进行简单的交叉测试，github链接：<a target="_blank" rel="noopener" href="https://github.com/SuliemNn/S-AES">S-AES</a></p>
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="适彼乐土的随想空间" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;"><i class="fas fa-list-ul"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><div class="card-image"><span class="image is-7by3"><img class="fill" src="/../assets/S-AES/cover.png" alt="S-AES加密算法"></span></div><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2024-02-09T16:18:58.000Z" title="2024/2/10 00:18:58">2024-02-10</time>发表</span><span class="level-item"><time dateTime="2024-02-10T15:45:43.812Z" title="2024/2/10 23:45:43">2024-02-10</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/%E6%95%99%E7%A8%8B/">教程</a></span><span class="level-item">18 分钟读完 (大约2665个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">S-AES加密算法</h1><div class="content"><p>本文将实现简单的AES加密算法，并进行简单的交叉测试，github链接：<a target="_blank" rel="noopener" href="https://github.com/SuliemNn/S-AES">S-AES</a></p>
 <span id="more"></span>
-<h1 id="流程概述"><a href="#流程概述" class="headerlink" title="流程概述"></a>流程概述</h1><p><img src="/.io//S-AES/total.png"></p>
+<h1 id="流程概述"><a href="#流程概述" class="headerlink" title="流程概述"></a>流程概述</h1><p><img src="/../assets/S-AES/total.png"></p>
 <ol>
 <li><p><strong>密钥扩展（Key Expansion）</strong>：</p>
 <ul>
@@ -143,11 +66,11 @@
 </ul>
 </li>
 </ol>
-<p><img src="/.io//Pasted%20image%2020240210005007.png"></p>
+<p><img src="/../assets/S-AES/preview.png"></p>
 <h1 id="S-AES的加密与解密"><a href="#S-AES的加密与解密" class="headerlink" title="S-AES的加密与解密"></a>S-AES的加密与解密</h1><h2 id="步骤拆解"><a href="#步骤拆解" class="headerlink" title="步骤拆解"></a>步骤拆解</h2><h3 id="定义初始常量"><a href="#定义初始常量" class="headerlink" title="定义初始常量"></a>定义初始常量</h3><p>初始常量不同，相同的key得到的密钥也不同，所以我们需要先规定一个初始常量。这些常量均可以被公开，而不会影响到密码的安全性。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#轮常数  </span></span><br><span class="line">cons1=<span class="string">&quot;10000000&quot;</span>  </span><br><span class="line">cons2=<span class="string">&quot;00110000&quot;</span>  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 置换盒  </span></span><br><span class="line">S_Box = [[<span class="string">&#x27;9&#x27;</span>, <span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;A&#x27;</span>, <span class="string">&#x27;B&#x27;</span>],  </span><br><span class="line">         [<span class="string">&#x27;D&#x27;</span>, <span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;5&#x27;</span>],  </span><br><span class="line">         [<span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;3&#x27;</span>],  </span><br><span class="line">         [<span class="string">&#x27;C&#x27;</span>, <span class="string">&#x27;E&#x27;</span>, <span class="string">&#x27;F&#x27;</span>, <span class="string">&#x27;7&#x27;</span>]]  </span><br><span class="line"><span class="comment"># 逆置换盒  </span></span><br><span class="line">S_deBox = [[<span class="string">&#x27;A&#x27;</span>, <span class="string">&#x27;5&#x27;</span>, <span class="string">&#x27;9&#x27;</span>, <span class="string">&#x27;B&#x27;</span>],  </span><br><span class="line">           [<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;7&#x27;</span>, <span class="string">&#x27;8&#x27;</span>, <span class="string">&#x27;F&#x27;</span>],  </span><br><span class="line">           [<span class="string">&#x27;6&#x27;</span>, <span class="string">&#x27;0&#x27;</span>, <span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;3&#x27;</span>],  </span><br><span class="line">           [<span class="string">&#x27;C&#x27;</span>, <span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;D&#x27;</span>, <span class="string">&#x27;E&#x27;</span>]]  </span><br><span class="line">  </span><br><span class="line">mixMatrix = [[<span class="string">&#x27;1&#x27;</span>, <span class="string">&#x27;4&#x27;</span>], [<span class="string">&#x27;4&#x27;</span>, <span class="string">&#x27;1&#x27;</span>]]  </span><br><span class="line">deMixMatrix = [[<span class="string">&#x27;9&#x27;</span>, <span class="string">&#x27;2&#x27;</span>], [<span class="string">&#x27;2&#x27;</span>, <span class="string">&#x27;9&#x27;</span>]]</span><br></pre></td></tr></table></figure>
 
-<h3 id="密钥扩展"><a href="#密钥扩展" class="headerlink" title="密钥扩展"></a>密钥扩展</h3><p>原来的密钥需要生成多对子密钥，分别作为各轮加密步骤的子密钥。<br><img src="/.io//Pasted%20image%2020240210005922.png"><br>&#x3D;&#x3D;将16位密钥分为左右两部分，每一部分各8位。记原始密钥为第0个密钥。&#x3D;&#x3D;</p>
+<h3 id="密钥扩展"><a href="#密钥扩展" class="headerlink" title="密钥扩展"></a>密钥扩展</h3><p>原来的密钥需要生成多对子密钥，分别作为各轮加密步骤的子密钥。<br><img src="/../assets/S-AES/G.png"><br>&#x3D;&#x3D;将16位密钥分为左右两部分，每一部分各8位。记原始密钥为第0个密钥。&#x3D;&#x3D;</p>
 <p>在计算第<code>i</code>个密钥时，首先将第<code>i-1</code>个密钥的右半部分（8位）进行左循环移位，即将第<code>i-1</code>个密钥的右半部分的左右4位进行交换，再将左循环移位后的第<code>i-1</code>个密钥的右半部分（8位）进行S盒置换。</p>
 <p>进行S盒置换后需要与轮常数进行异或，S-AES的轮常数定义为：第一轮加密的轮常数是【1000 0000】，第二轮加密的轮常数是【0011 0000】。</p>
 <p>上述步骤就是示意图中函数g的步骤，将第i-1个密钥的右半部分（8位）执行完上述步骤后得到g(第i-1个密钥的右半部分)，将其与第i-1个密钥的左半部分（8位）进行异或得到第i个密钥的左半部分。</p>
@@ -160,23 +83,23 @@
 <p>结果如下：</p>
 <figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">密钥扩展确认</span><br><span class="line">第一轮加密：0001110000100111</span><br><span class="line">第二轮加密：0111011001010001</span><br></pre></td></tr></table></figure>
 <h3 id="轮密钥加"><a href="#轮密钥加" class="headerlink" title="轮密钥加"></a>轮密钥加</h3><p>第零轮加密，也就是对状态矩阵与密钥进行逐位的异或操作</p>
-<p><img src="/.io//Pasted%20image%2020240210004638.png"></p>
+<p><img src="/../assets/S-AES/keyPlus.png"></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 轮密钥加密：逐位进行异或操作 输入两个二进制字符串，输出结果=&gt;二进制字符串  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">xor</span>(<span class="params">text1, text2</span>):  </span><br><span class="line">    i = <span class="number">0</span>  </span><br><span class="line">    restext = <span class="string">&quot;&quot;</span>  </span><br><span class="line">    <span class="keyword">while</span> i &lt; <span class="built_in">len</span>(text1):  </span><br><span class="line">        <span class="keyword">if</span> text1[i] == text2[i]:  </span><br><span class="line">            restext += <span class="string">&quot;0&quot;</span>  </span><br><span class="line">        <span class="keyword">else</span>:  </span><br><span class="line">            restext += <span class="string">&quot;1&quot;</span>  </span><br><span class="line">        i += <span class="number">1</span>  </span><br><span class="line">    <span class="keyword">return</span> restext</span><br></pre></td></tr></table></figure>
 
-<h3 id="半字节替代"><a href="#半字节替代" class="headerlink" title="半字节替代"></a>半字节替代</h3><p><img src="/.io//Pasted%20image%2020240210011101.png"><br>代码实现如下：</p>
+<h3 id="半字节替代"><a href="#半字节替代" class="headerlink" title="半字节替代"></a>半字节替代</h3><p><img src="/../assets/S-AES/halfByteReplace.png"><br>代码实现如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 半字节替代，传入二进制字符串，返回二进制字符串  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">halfByteReplace</span>(<span class="params">text, Box</span>):  </span><br><span class="line">    index = <span class="number">0</span>  </span><br><span class="line">    result = <span class="string">&quot;&quot;</span>  </span><br><span class="line">    <span class="keyword">while</span> index &lt; <span class="built_in">len</span>(text):  </span><br><span class="line">        i = <span class="built_in">int</span>(text[index:index + <span class="number">2</span>], <span class="number">2</span>)  </span><br><span class="line">        j = <span class="built_in">int</span>(text[index + <span class="number">2</span>:index + <span class="number">4</span>], <span class="number">2</span>)  </span><br><span class="line">        result += Box[i][j]  </span><br><span class="line">        index += <span class="number">4</span>  </span><br><span class="line">  </span><br><span class="line">    <span class="comment"># 十六进制转换二进制  </span></span><br><span class="line">    result = <span class="built_in">bin</span>(<span class="built_in">int</span>(result, <span class="number">16</span>))[<span class="number">2</span>:].zfill(<span class="number">16</span>)  </span><br><span class="line">    <span class="keyword">return</span> result</span><br></pre></td></tr></table></figure>
 <p>因为在这里用到了置换盒，我们需要保证正置换盒和逆置换盒之间是匹配的，所以需要进行测试：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 置换盒测试程序  </span></span><br><span class="line">plainText = <span class="built_in">bin</span>(<span class="built_in">int</span>(<span class="string">&quot;8A1C&quot;</span>, <span class="number">16</span>))[<span class="number">2</span>:]  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;置换盒测试&quot;</span>)  </span><br><span class="line"><span class="built_in">print</span>(plainText)  </span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(<span class="built_in">int</span>(halfByteReplace(plainText, S_Box), <span class="number">2</span>)))  </span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(<span class="built_in">int</span>(halfByteReplace(halfByteReplace(plainText, S_Box), S_deBox), <span class="number">2</span>)))</span><br></pre></td></tr></table></figure>
 
 <figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">置换盒测试</span><br><span class="line">1000101000011100</span><br><span class="line">0x604c</span><br><span class="line">0x8a1c</span><br></pre></td></tr></table></figure>
 <p>发现置换盒确实可逆，测试通过！！！</p>
-<h3 id="行移位"><a href="#行移位" class="headerlink" title="行移位"></a>行移位</h3><p><img src="/.io//Pasted%20image%2020240210011745.png"><br>这个很简单，直接上代码实现：</p>
+<h3 id="行移位"><a href="#行移位" class="headerlink" title="行移位"></a>行移位</h3><p><img src="/../assets/S-AES/shift.png"><br>这个很简单，直接上代码实现：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 左循环移位，传入二进制字符串，返回二进制字符串  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">left_shift</span>(<span class="params">text</span>):  </span><br><span class="line">    stateMartix = toStateMartix(text)  </span><br><span class="line">  </span><br><span class="line">    <span class="comment"># 交换  </span></span><br><span class="line">    tem = stateMartix[<span class="number">1</span>][<span class="number">0</span>]  </span><br><span class="line">    stateMartix[<span class="number">1</span>][<span class="number">0</span>] = stateMartix[<span class="number">1</span>][<span class="number">1</span>]  </span><br><span class="line">    stateMartix[<span class="number">1</span>][<span class="number">1</span>] = tem  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> reStateMartix(stateMartix)</span><br></pre></td></tr></table></figure>
 <p>测试程序如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 行移位测试程序  </span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;行移位测试&quot;</span>)  </span><br><span class="line">resText = halfByteReplace(plainText, S_Box)  </span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">hex</span>(<span class="built_in">int</span>(left_shift(resText), <span class="number">2</span>)))</span><br></pre></td></tr></table></figure>
 <figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">行移位测试</span><br><span class="line">0x6c40</span><br></pre></td></tr></table></figure>
 
-<h3 id="列混淆"><a href="#列混淆" class="headerlink" title="列混淆"></a>列混淆</h3><p><img src="/.io//cloumnMix.png"><br>代码实现如下：</p>
+<h3 id="列混淆"><a href="#列混淆" class="headerlink" title="列混淆"></a>列混淆</h3><p><img src="/../assets/S-AES/cloumnMix.png"><br>代码实现如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">gf_add</span>(<span class="params">a, b</span>):  </span><br><span class="line">    <span class="keyword">return</span> a ^ b  <span class="comment"># 二进制数的异或运算即为GF(2^4)的加法运算  </span></span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">def</span> <span class="title function_">gf_multiply</span>(<span class="params">a, b</span>):  </span><br><span class="line">    result = <span class="number">0</span>  </span><br><span class="line">    <span class="keyword">while</span> b != <span class="number">0</span>:  </span><br><span class="line">        <span class="keyword">if</span> b &amp; <span class="number">1</span>:  </span><br><span class="line">            result ^= a  </span><br><span class="line">        a &lt;&lt;= <span class="number">1</span>  </span><br><span class="line">        <span class="keyword">if</span> a &amp; <span class="number">0x10</span>:  </span><br><span class="line">            a ^= <span class="number">0b10011</span>  <span class="comment"># GF(2^4)的乘法多项式 x^4 + x + 1        b &gt;&gt;= 1  </span></span><br><span class="line">    <span class="keyword">return</span> result % <span class="number">16</span>  <span class="comment"># 结果需要模上16，因为GF(2^4)的元素是4位二进制数  </span></span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 列混淆函数，传入一个列混淆矩阵和一个二进制字符串。返回一个二进制字符串  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">colMix</span>(<span class="params">colMartix, byteText</span>):  </span><br><span class="line">    myMartix = toStateMartix(byteText)  </span><br><span class="line">    resMartix = [[<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>], [<span class="string">&quot;&quot;</span>, <span class="string">&quot;&quot;</span>]]  </span><br><span class="line">    resMartix[<span class="number">0</span>][<span class="number">0</span>] = <span class="built_in">bin</span>(gf_add(gf_multiply(<span class="built_in">int</span>(colMartix[<span class="number">0</span>][<span class="number">0</span>], <span class="number">16</span>), <span class="built_in">int</span>(myMartix[<span class="number">0</span>][<span class="number">0</span>], <span class="number">2</span>)),  </span><br><span class="line">                                 gf_multiply(<span class="built_in">int</span>(colMartix[<span class="number">0</span>][<span class="number">1</span>], <span class="number">16</span>), <span class="built_in">int</span>(myMartix[<span class="number">1</span>][<span class="number">0</span>], <span class="number">2</span>))))[<span class="number">2</span>:].zfill(<span class="number">4</span>)  </span><br><span class="line">  </span><br><span class="line">    resMartix[<span class="number">0</span>][<span class="number">1</span>] = <span class="built_in">bin</span>(gf_add(gf_multiply(<span class="built_in">int</span>(colMartix[<span class="number">0</span>][<span class="number">0</span>], <span class="number">16</span>), <span class="built_in">int</span>(myMartix[<span class="number">0</span>][<span class="number">1</span>], <span class="number">2</span>)),  </span><br><span class="line">                                 gf_multiply(<span class="built_in">int</span>(colMartix[<span class="number">0</span>][<span class="number">1</span>], <span class="number">16</span>), <span class="built_in">int</span>(myMartix[<span class="number">1</span>][<span class="number">1</span>], <span class="number">2</span>))))[<span class="number">2</span>:].zfill(<span class="number">4</span>)  </span><br><span class="line">  </span><br><span class="line">    resMartix[<span class="number">1</span>][<span class="number">0</span>] = <span class="built_in">bin</span>(gf_add(gf_multiply(<span class="built_in">int</span>(colMartix[<span class="number">1</span>][<span class="number">0</span>], <span class="number">16</span>), <span class="built_in">int</span>(myMartix[<span class="number">0</span>][<span class="number">0</span>], <span class="number">2</span>)),  </span><br><span class="line">                                 gf_multiply(<span class="built_in">int</span>(colMartix[<span class="number">1</span>][<span class="number">1</span>], <span class="number">16</span>), <span class="built_in">int</span>(myMartix[<span class="number">1</span>][<span class="number">0</span>], <span class="number">2</span>))))[<span class="number">2</span>:].zfill(<span class="number">4</span>)  </span><br><span class="line">  </span><br><span class="line">    resMartix[<span class="number">1</span>][<span class="number">1</span>] = <span class="built_in">bin</span>(gf_add(gf_multiply(<span class="built_in">int</span>(colMartix[<span class="number">1</span>][<span class="number">0</span>], <span class="number">16</span>), <span class="built_in">int</span>(myMartix[<span class="number">0</span>][<span class="number">1</span>], <span class="number">2</span>)),  </span><br><span class="line">                                 gf_multiply(<span class="built_in">int</span>(colMartix[<span class="number">1</span>][<span class="number">1</span>], <span class="number">16</span>), <span class="built_in">int</span>(myMartix[<span class="number">1</span>][<span class="number">1</span>], <span class="number">2</span>))))[<span class="number">2</span>:].zfill(<span class="number">4</span>)  </span><br><span class="line">  </span><br><span class="line">    <span class="keyword">return</span> reStateMartix(resMartix)</span><br></pre></td></tr></table></figure>
 
 <p>测试程序如下：</p>
@@ -211,134 +134,48 @@
 <p>测试函数</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#多重加密  </span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;多重加密&quot;</span>)  </span><br><span class="line">mulcyber=multiplyEnCrypt(<span class="string">&quot;0110111101101011&quot;</span>,<span class="string">&quot;10100111001110110110111101101011&quot;</span>)  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;加密后的密文为：&quot;</span>+mulcyber)  </span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;解密后的明文为：&quot;</span>+multiplyDeCrypt(mulcyber,<span class="string">&quot;10100111001110110110111101101011&quot;</span>))</span><br></pre></td></tr></table></figure>
 <p>预期结果</p>
-<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">多重加密</span><br><span class="line">加密后的密文为：0101101111011000</span><br><span class="line">解密后的明文为：0110111101101011</span><br></pre></td></tr></table></figure>
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://suliemnn.github.io/2024/02/10/S-AES/" data-id="clsg0a94v0000kkvodqnp97c2" data-title="S-AES加密算法" class="article-share-link"><span class="fa fa-share">分享</span></a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E6%95%99%E5%AD%A6/" rel="tag">加密算法, 教学</a></li></ul>
-
-    </footer>
-  </div>
-  
-    
-<nav id="article-nav">
-  
-  
-    <a href="/2024/02/08/My-First-Post/" id="article-nav-older" class="article-nav-link-wrap">
-      <strong class="article-nav-caption">后一篇</strong>
-      <div class="article-nav-title">这是我的第一篇博客！！！</div>
-    </a>
-  
-</nav>
-
-  
-</article>
-
-
-</section>
-        
-          <aside id="sidebar">
-  
-    
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">标签</h3>
-    <div class="widget">
-      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E6%95%99%E5%AD%A6/" rel="tag">加密算法, 教学</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">标签云</h3>
-    <div class="widget tagcloud">
-      <a href="/tags/%E5%8A%A0%E5%AF%86%E7%AE%97%E6%B3%95-%E6%95%99%E5%AD%A6/" style="font-size: 10px;">加密算法, 教学</a>
-    </div>
-  </div>
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">归档</h3>
-    <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/02/">二月 2024</a></li></ul>
-    </div>
-  </div>
-
-
-  
-    
-  <div class="widget-wrap">
-    <h3 class="widget-title">最新文章</h3>
-    <div class="widget">
-      <ul>
-        
-          <li>
-            <a href="/2024/02/10/S-AES/">S-AES加密算法</a>
-          </li>
-        
-          <li>
-            <a href="/2024/02/08/My-First-Post/">这是我的第一篇博客！！！</a>
-          </li>
-        
-          <li>
-            <a href="/2024/02/08/hello-world/">Hello World</a>
-          </li>
-        
-      </ul>
-    </div>
-  </div>
-
-  
-</aside>
-        
-      </div>
-      <footer id="footer">
-  
-  <div class="outer">
-    <div id="footer-info" class="inner">
-      
-      &copy; 2024 适彼乐土<br>
-      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
-    </div>
-  </div>
-</footer>
-
-    </div>
-    <nav id="mobile-nav">
-  
-    <a href="/" class="mobile-nav-link">Home</a>
-  
-    <a href="/archives" class="mobile-nav-link">Archives</a>
-  
-</nav>
-    
-
-
-<script src="/js/jquery-3.6.4.min.js"></script>
-
-
-
-  
-<script src="/fancybox/jquery.fancybox.min.js"></script>
-
-
-
-
-<script src="/js/script.js"></script>
-
-
-
-
-
-  </div>
-</body>
-</html>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">多重加密</span><br><span class="line">加密后的密文为：0101101111011000</span><br><span class="line">解密后的明文为：0110111101101011</span><br></pre></td></tr></table></figure></div><div class="article-licensing box"><div class="licensing-title"><p>S-AES加密算法</p><p><a href="https://suliemnn.github.io/S-AES/">https://suliemnn.github.io/S-AES/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>适彼乐土</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2024-02-10</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2024-02-10</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="article-tags is-size-7 mb-4"><span class="mr-2">#</span><a class="link-muted mr-2" rel="tag" href="/tags/%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8/">信息安全</a><a class="link-muted mr-2" rel="tag" href="/tags/%E4%BB%A3%E7%A0%81%E5%A4%8D%E7%8E%B0/">代码复现</a></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3><div class="buttons is-centered"><a class="button donate" href="/" target="_blank" rel="noopener" data-type="afdian"><span class="icon is-small"><i class="fas fa-charging-station"></i></span><span>爱发电</span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>支付宝</span><span class="qrcode"><img src="/" alt="支付宝"></span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="buymeacoffee"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>送我杯咖啡</span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="patreon"><span class="icon is-small"><i class="fab fa-patreon"></i></span><span>Patreon</span></a><div class="notification is-danger">You forgot to set the <code>business</code> or <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.</div><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>微信</span><span class="qrcode"><img src="/" alt="微信"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/My-First-Post/"><span class="level-item">这是我的第一篇博客！！！</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="notification is-danger">You forgot to set the <code>shortname</code> for Disqus. Please set it in <code>_config.yml</code>.</div></div></div></div><!--!--><div class="column column-right is-4-tablet is-4-desktop is-4-widescreen  order-3 is-sticky"><div class="card widget" id="toc" data-type="toc"><div class="card-content"><div class="menu"><h3 class="menu-label">目录</h3><ul class="menu-list"><li><a class="level is-mobile" href="#流程概述"><span class="level-left"><span class="level-item">1</span><span class="level-item">流程概述</span></span></a></li><li><a class="level is-mobile" href="#S-AES的加密与解密"><span class="level-left"><span class="level-item">2</span><span class="level-item">S-AES的加密与解密</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#步骤拆解"><span class="level-left"><span class="level-item">2.1</span><span class="level-item">步骤拆解</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#定义初始常量"><span class="level-left"><span class="level-item">2.1.1</span><span class="level-item">定义初始常量</span></span></a></li><li><a class="level is-mobile" href="#密钥扩展"><span class="level-left"><span class="level-item">2.1.2</span><span class="level-item">密钥扩展</span></span></a></li><li><a class="level is-mobile" href="#轮密钥加"><span class="level-left"><span class="level-item">2.1.3</span><span class="level-item">轮密钥加</span></span></a></li><li><a class="level is-mobile" href="#半字节替代"><span class="level-left"><span class="level-item">2.1.4</span><span class="level-item">半字节替代</span></span></a></li><li><a class="level is-mobile" href="#行移位"><span class="level-left"><span class="level-item">2.1.5</span><span class="level-item">行移位</span></span></a></li><li><a class="level is-mobile" href="#列混淆"><span class="level-left"><span class="level-item">2.1.6</span><span class="level-item">列混淆</span></span></a></li></ul></li><li><a class="level is-mobile" href="#加密"><span class="level-left"><span class="level-item">2.2</span><span class="level-item">加密</span></span></a></li><li><a class="level is-mobile" href="#解密"><span class="level-left"><span class="level-item">2.3</span><span class="level-item">解密</span></span></a></li></ul></li><li><a class="level is-mobile" href="#加密算法扩展"><span class="level-left"><span class="level-item">3</span><span class="level-item">加密算法扩展</span></span></a><ul class="menu-list"><li><a class="level is-mobile" href="#ASCII码扩展"><span class="level-left"><span class="level-item">3.1</span><span class="level-item">ASCII码扩展</span></span></a></li><li><a class="level is-mobile" href="#暴力破解"><span class="level-left"><span class="level-item">3.2</span><span class="level-item">暴力破解</span></span></a></li><li><a class="level is-mobile" href="#多重加密"><span class="level-left"><span class="level-item">3.3</span><span class="level-item">多重加密</span></span></a></li></ul></li></ul></div></div><style>#toc .menu-list > li > a.is-active + .menu-list { display: block; }#toc .menu-list > li > a + .menu-list { display: none; }</style><script src="/js/toc.js" defer></script></div><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-02-09T16:18:58.000Z">2024-02-10</time></p><p class="title"><a href="/S-AES/">S-AES加密算法</a></p><p class="categories"><a href="/categories/%E6%95%99%E7%A8%8B/">教程</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-02-08T15:31:55.000Z">2024-02-08</time></p><p class="title"><a href="/My-First-Post/">这是我的第一篇博客！！！</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-02-08T15:21:56.886Z">2024-02-08</time></p><p class="title"><a href="/hello-world/">Hello World</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="适彼乐土的随想空间" height="28"></a><p class="is-size-7"><span>&copy; 2024 适彼乐土</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">© 2019</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
