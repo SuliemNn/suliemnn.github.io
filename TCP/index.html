@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="zh"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta><title>TCP - 适彼乐土的随想空间</title><link rel="manifest" href="/manifest.json"><meta name="application-name" content="适彼乐土的随想空间"><meta name="msapplication-TileImage" content="/img/favicon.svg"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="适彼乐土的随想空间"><meta name="apple-mobile-web-app-status-bar-style" content="default"><meta name="description" content="概述TCP（Transmission Control Protocol，传输控制协议）是一种在计算机网络中常用的通信协议，位于网络协议栈的传输层。它提供了可靠的、面向连接的数据传输服务，被广泛应用于互联网及局域网中各种网络通信场景。"><meta property="og:type" content="blog"><meta property="og:title" content="TCP"><meta property="og:url" content="https://suliemnn.github.io/TCP/"><meta property="og:site_name" content="适彼乐土的随想空间"><meta property="og:description" content="概述TCP（Transmission Control Protocol，传输控制协议）是一种在计算机网络中常用的通信协议，位于网络协议栈的传输层。它提供了可靠的、面向连接的数据传输服务，被广泛应用于互联网及局域网中各种网络通信场景。"><meta property="og:locale" content="zh_CN"><meta property="og:image" content="https://suliemnn.github.io/image-20240312194545230.png"><meta property="og:image" content="https://suliemnn.github.io/image-20240312195432362.png"><meta property="og:image" content="https://suliemnn.github.io/image-20240312195829161.png"><meta property="og:image" content="https://suliemnn.github.io/image-20240312200208141.png"><meta property="og:image" content="https://suliemnn.github.io/image-20240312200729235.png"><meta property="og:image" content="https://suliemnn.github.io/image-20240312202204470.png"><meta property="og:image" content="https://suliemnn.github.io/image-20240312202826292.png"><meta property="og:image" content="https://suliemnn.github.io/image-20240312202914595.png"><meta property="og:image" content="https://suliemnn.github.io/image-20240312203808983.png"><meta property="article:published_time" content="2024-03-12T08:28:03.000Z"><meta property="article:modified_time" content="2024-03-12T14:45:28.455Z"><meta property="article:author" content="适彼乐土"><meta property="twitter:card" content="summary"><meta property="twitter:image:src" content="https://suliemnn.github.io/image-20240312194545230.png"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BlogPosting","mainEntityOfPage":{"@type":"WebPage","@id":"https://suliemnn.github.io/TCP/"},"headline":"TCP","image":["https://suliemnn.github.io/image-20240312194545230.png","https://suliemnn.github.io/image-20240312195432362.png","https://suliemnn.github.io/image-20240312195829161.png","https://suliemnn.github.io/image-20240312200208141.png","https://suliemnn.github.io/image-20240312200729235.png","https://suliemnn.github.io/image-20240312202204470.png","https://suliemnn.github.io/image-20240312202826292.png","https://suliemnn.github.io/image-20240312202914595.png","https://suliemnn.github.io/image-20240312203808983.png"],"datePublished":"2024-03-12T08:28:03.000Z","dateModified":"2024-03-12T14:45:28.455Z","author":{"@type":"Person","name":"适彼乐土"},"publisher":{"@type":"Organization","name":"适彼乐土的随想空间","logo":{"@type":"ImageObject","url":"https://suliemnn.github.io/img/logo.svg"}},"description":"概述TCP（Transmission Control Protocol，传输控制协议）是一种在计算机网络中常用的通信协议，位于网络协议栈的传输层。它提供了可靠的、面向连接的数据传输服务，被广泛应用于互联网及局域网中各种网络通信场景。"}</script><link rel="canonical" href="https://suliemnn.github.io/TCP/"><link rel="icon" href="/img/favicon.svg"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v6.0.0/css/all.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.7.0/styles/atom-one-light.css"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;600&amp;family=Source+Code+Pro"><link rel="stylesheet" href="/css/default.css"><style>body>.footer,body>.navbar,body>.section{opacity:0}</style><!--!--><!--!--><!--!--><!--!--><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/css/lightgallery.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/css/justifiedGallery.min.css"><!--!--><!--!--><style>.pace{-webkit-pointer-events:none;pointer-events:none;-webkit-user-select:none;-moz-user-select:none;user-select:none}.pace-inactive{display:none}.pace .pace-progress{background:#3273dc;position:fixed;z-index:2000;top:0;right:100%;width:100%;height:2px}</style><script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js"></script><!--!--><!--!--><!-- hexo injector head_end start --><script>
+  (function () {
+      function switchTab() {
+          if (!location.hash) {
+            return;
+          }
+
+          const id = '#' + CSS.escape(location.hash.substring(1));
+          const $tabMenu = document.querySelector(`.tabs a[href="${id}"]`);
+          if (!$tabMenu) {
+            return;
+          }
+
+          const $tabMenuContainer = $tabMenu.parentElement.parentElement;
+          Array.from($tabMenuContainer.children).forEach($menu => $menu.classList.remove('is-active'));
+          Array.from($tabMenuContainer.querySelectorAll('a'))
+              .map($menu => document.getElementById($menu.getAttribute("href").substring(1)))
+              .forEach($content => $content.classList.add('is-hidden'));
+
+          if ($tabMenu) {
+              $tabMenu.parentElement.classList.add('is-active');
+          }
+          const $activeTab = document.querySelector(id);
+          if ($activeTab) {
+              $activeTab.classList.remove('is-hidden');
+          }
+      }
+      switchTab();
+      window.addEventListener('hashchange', switchTab, false);
+  })();
+  </script><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head><body class="is-2-column"><nav class="navbar navbar-main"><div class="container navbar-container"><div class="navbar-brand justify-content-center"><a class="navbar-item navbar-logo" href="/"><img src="/img/logo.svg" alt="适彼乐土的随想空间" height="28"></a></div><div class="navbar-menu"><div class="navbar-start"><a class="navbar-item" href="/">Home</a><a class="navbar-item" href="/archives">Archives</a><a class="navbar-item" href="/categories">Categories</a><a class="navbar-item" href="/tags">Tags</a><a class="navbar-item" href="/about">About</a></div><div class="navbar-end"><a class="navbar-item" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a><a class="navbar-item search" title="搜索" href="javascript:;"><i class="fas fa-search"></i></a></div></div></div></nav><section class="section"><div class="container"><div class="columns"><div class="column order-2 column-main is-8-tablet is-8-desktop is-8-widescreen"><div class="card"><article class="card-content article" role="article"><div class="article-meta is-size-7 is-uppercase level is-mobile"><div class="level-left"><span class="level-item"><time dateTime="2024-03-12T08:28:03.000Z" title="2024/3/12 16:28:03">2024-03-12</time>发表</span><span class="level-item"><time dateTime="2024-03-12T14:45:28.455Z" title="2024/3/12 22:45:28">2024-03-12</time>更新</span><span class="level-item"><a class="link-muted" href="/categories/%E6%8A%80%E6%9C%AF/">技术</a><span> / </span><a class="link-muted" href="/categories/%E6%8A%80%E6%9C%AF/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a><span> / </span><a class="link-muted" href="/categories/%E6%8A%80%E6%9C%AF/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82/">运输层</a></span><span class="level-item">24 分钟读完 (大约3628个字)</span></div></div><h1 class="title is-3 is-size-4-mobile">TCP</h1><div class="content"><h1 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h1><p><strong>TCP</strong>（Transmission Control Protocol，传输控制协议）是一种在计算机网络中常用的通信协议，位于网络协议栈的传输层。它提供了可靠的、面向连接的数据传输服务，被广泛应用于互联网及局域网中各种网络通信场景。</p>
+<span id="more"></span>
+<p>TCP的主要特点包括：</p>
+<ol>
+<li><p><strong>可靠性</strong>：TCP通过序列号、确认和重传机制来确保数据的可靠传输。每个数据包都会标记一个序列号，接收方收到数据后会发送确认，发送方在一定时间内未收到确认就会重传数据，以保证数据能够正确到达。</p>
+</li>
+<li><p><strong>面向连接</strong>：在进行数据传输之前，TCP会先建立连接，包括三次握手过程，确保通信双方都能正常通信。数据传输完成后，还需要进行连接的释放，包括四次挥手过程。</p>
+</li>
+<li><p><strong>流量控制</strong>：TCP使用滑动窗口机制进行流量控制，确保发送方发送的数据不会超过接收方的处理能力，避免数据丢失或网络拥塞。</p>
+</li>
+<li><p><strong>拥塞控制</strong>：TCP使用拥塞窗口和拥塞避免算法来控制数据在网络中的传输速率，以防止网络拥塞和丢包情况的发生，从而保证网络的稳定性和性能。</p>
+</li>
+<li><p><strong>全双工通信</strong>：TCP连接是全双工的，允许双方同时发送和接收数据，实现了双向通信。</p>
+</li>
+<li><p><strong>面向字节流</strong>：TCP将数据视为连续的字节流进行传输，没有消息边界的概念，接收方需要根据应用协议来解析数据。</p>
+</li>
+</ol>
+<p>TCP在互联网中被广泛应用于各种网络应用中，如Web浏览、文件传输、电子邮件等，其可靠性和稳定性使其成为网络通信中不可或缺的一部分。</p>
+<h1 id="知识要点"><a href="#知识要点" class="headerlink" title="知识要点"></a>知识要点</h1><h2 id="TCP报文的首部格式"><a href="#TCP报文的首部格式" class="headerlink" title="TCP报文的首部格式"></a>TCP报文的首部格式</h2><p><img src="/image-20240312194545230.png"></p>
+<p>TCP报文的首部包含以下各个字段：</p>
+<ol>
+<li><p><strong>源端口</strong>：占16位，表示发送方的端口号。</p>
+</li>
+<li><p><strong>目的端口</strong>：占16位，表示接收方的端口号。</p>
+</li>
+<li><p><strong>序列号</strong>：占32位，用于对发送的数据进行排序和重组。</p>
+</li>
+<li><p><strong>确认号</strong>：占32位，表示期望接收的下一个数据字节的序号。</p>
+</li>
+<li><p><strong>数据偏移</strong>：占4位，表示TCP头部的长度，以32位字为单位。</p>
+</li>
+<li><p><strong>保留</strong>：占6位，留待将来使用，目前必须为0。</p>
+</li>
+<li><p><strong>标志位</strong>：占6位，包括URG、ACK、PSH、RST、SYN和FIN，用于控制TCP连接的建立、终止和数据传输过程。</p>
+</li>
+<li><p><strong>窗口大小</strong>：占16位，表示发送方愿意接收的窗口大小，用于流量控制。</p>
+</li>
+<li><p><strong>校验和</strong>：占16位，用于检测TCP首部和数据在传输过程中是否出现错误。</p>
+</li>
+<li><p><strong>紧急指针</strong>：占16位，用于指示紧急数据的末尾位置。</p>
+</li>
+<li><p><strong>选项</strong>：可选字段，用于在TCP头部中包含一些额外的控制信息，如选择性确认、最大报文大小等。</p>
+</li>
+<li><p><strong>数据</strong>：占可变长度，用于存储应用层的数据。</p>
+</li>
+</ol>
+<p>这些字段共同组成了TCP报文的首部，用于在TCP通信中标识和管理数据传输。</p>
+<p>TCP报文的标志位字段包含6个位，用于控制TCP连接的建立、终止和数据传输过程。下面是对每个标志位的介绍：</p>
+<ol>
+<li><p><strong>URG（Urgent）</strong>：紧急指针（Urgent Pointer）有效。当此标志位被设置时，表示紧急数据存在于TCP数据流中，并且紧急指针字段指示了紧急数据的末尾位置。紧急数据用于在正常数据传输之外发送一些重要的控制信息。</p>
+</li>
+<li><p><strong>ACK（Acknowledgment）</strong>：确认号（Acknowledgment Number）有效。<strong>当此标志位被设置为1时，表示确认号字段中包含的确认序列号有效</strong>，即接收方已经成功接收到了发送方期望接收的数据。</p>
+</li>
+<li><p><strong>PSH（Push）</strong>：推送数据（Push）。当此标志位被设置时，表示发送方希望尽快将数据推送给接收方，而不需要等到发送缓冲区满或者等待ACK确认。</p>
+</li>
+<li><p><strong>RST（Reset）</strong>：连接复位（Reset）。当此标志位被设置时，表示发生严重错误，要求对方重新建立连接。通常用于异常情况下的连接复位。</p>
+</li>
+<li><p><strong>SYN（Synchronize）</strong>：同步序列号（Synchronize Sequence Numbers）。用于建立连接时的同步序列号的交换。在三次握手的过程中，<strong>SYN用于请求建立连接</strong>，并且包含了发送方的初始序列号。</p>
+</li>
+<li><p><strong>FIN（Finish）</strong>：结束连接（Finish）。当此标志位被设置时，表示发送方已经没有数据要发送了，并请求关闭连接。通常用于正常的连接终止过程中。</p>
+</li>
+</ol>
+<h2 id="TCP连接的建立与释放"><a href="#TCP连接的建立与释放" class="headerlink" title="TCP连接的建立与释放"></a>TCP连接的建立与释放</h2><h3 id="TCP连接的建立"><a href="#TCP连接的建立" class="headerlink" title="TCP连接的建立"></a>TCP连接的建立</h3><h4 id="流程概述"><a href="#流程概述" class="headerlink" title="流程概述"></a>流程概述</h4><p><img src="/image-20240312195432362.png"></p>
+<ol>
+<li><p><strong>第一次握手（SYN）</strong>：</p>
+<ul>
+<li>客户端发送一个带有SYN标志位的TCP报文段，指示客户端要求建立连接。</li>
+<li>这个报文段中包含了客户端的初始序列号（Sequence Number），用来标识客户端发送的数据。</li>
+</ul>
+</li>
+<li><p><strong>第二次握手（SYN + ACK）</strong>：</p>
+<ul>
+<li>服务器接收到客户端的SYN报文段后，会发送一个带有SYN和ACK标志位的TCP报文段作为响应。</li>
+<li>这个报文段中确认了客户端的序列号，并且也包含了服务器的初始序列号。</li>
+</ul>
+</li>
+<li><p><strong>第三次握手（ACK）</strong>：</p>
+<ul>
+<li>客户端收到服务器的SYN + ACK报文段后，会向服务器发送一个带有ACK标志位的TCP报文段。</li>
+<li>这个报文段中确认了服务器的序列号，表示客户端已经接受到了服务器的确认，并且连接已经建立完成。此时也可以发送应用层的数据</li>
+</ul>
+</li>
+</ol>
+<h4 id="可不可以两次握手？"><a href="#可不可以两次握手？" class="headerlink" title="可不可以两次握手？"></a>可不可以两次握手？</h4><p><img src="/image-20240312195829161.png"></p>
+<p>如果一开始发送的TCP连接请求因为过去了很久很久才到达了TCP服务器，因为是两次握手，TCP服务器会直接进入连接建立状态。同时这个时候TCP服务器会不断发送响应请求，但此时TCP客户处于关闭状态，这样会造成很大的资源浪费。</p>
+<h3 id="TCP连接的释放"><a href="#TCP连接的释放" class="headerlink" title="TCP连接的释放"></a>TCP连接的释放</h3><h4 id="流程概述-1"><a href="#流程概述-1" class="headerlink" title="流程概述"></a>流程概述</h4><p><img src="/image-20240312200208141.png"><br><strong>TCP四次挥手的过程：</strong></p>
+<ol>
+<li><p><strong>第一次挥手（FIN）</strong>：</p>
+<ul>
+<li>客户端或服务器其中一方决定关闭连接，发送一个带有FIN标志位的TCP报文给对方，表示自己不再发送数据，但仍愿意接收数据。</li>
+<li>发送方会继续发送数据直到所有数据发送完毕或达到超时时间。</li>
+</ul>
+</li>
+<li><p><strong>第二次挥手（ACK）</strong>：</p>
+<ul>
+<li>接收到第一次挥手的一方（接收方）收到FIN后，会发送一个带有ACK标志位的TCP报文，确认收到了对方的FIN，并且进入关闭等待状态。此时，该方可以继续发送数据。</li>
+</ul>
+</li>
+<li><p><strong>第三次挥手（FIN）</strong>：</p>
+<ul>
+<li>接收到第二次挥手的一方（发送方）在发送完数据后，也决定关闭连接，于是发送一个带有FIN标志位的TCP报文给对方，表示自己不再发送数据，但仍愿意接收数据。</li>
+<li>发送方会等待接收方的确认，或者等待一段时间后主动关闭连接。</li>
+</ul>
+</li>
+<li><p><strong>第四次挥手（ACK）</strong>：</p>
+<ul>
+<li>接收到第三次挥手的一方发送一个带有ACK标志位的TCP报文给对方，确认收到了对方的FIN，并且发送方也关闭了连接。</li>
+<li>接收方等待一段时间确认对方是否接收到了FIN，然后关闭连接。</li>
+</ul>
+</li>
+</ol>
+<h4 id="可不可以三次挥手？"><a href="#可不可以三次挥手？" class="headerlink" title="可不可以三次挥手？"></a>可不可以三次挥手？</h4><p>如果三次挥手，那么意思是TCP客户将会在收到第三次挥手信息之后关闭，服务器将会在发送第三次挥手信息之后关闭。但是如果第三次挥手信息中途丢失了，但是服务器此时又直接关闭了，那么客户将一直拿不到最后一次的数据，也没有办法发送ack报文要求对方重传。客户机将一直挂起</p>
+<h4 id="为什么最后一次挥手之后还要等待2MSL"><a href="#为什么最后一次挥手之后还要等待2MSL" class="headerlink" title="为什么最后一次挥手之后还要等待2MSL"></a>为什么最后一次挥手之后还要等待2MSL</h4><p><img src="/image-20240312200729235.png"></p>
+<p>如图所示，当第四次挥手的报文丢失之后，TCP服务器会超时重传重新发送第三次挥手的报文信息，但是如果此时TCP进入关闭状态，那么TCP服务器将迟迟收不到响应，将会一直进行超时重传，所以需要等待。<br>为什么等待的刚好是2MSL? 2MSL 的时间刚好够客户自己的报文发送出去并且丢失，加上TCP服务器超时重传的时间。</p>
+<h2 id="TCP流量控制"><a href="#TCP流量控制" class="headerlink" title="TCP流量控制"></a>TCP流量控制</h2><p><img src="/image-20240312202204470.png"></p>
+<p>初始在建立连接的时候，双方就会确定发送窗口的大小，假设初始确定的滑动窗口大小为400.<br><img src="/image-20240312202826292.png"></p>
+<h2 id="TCP拥塞控制"><a href="#TCP拥塞控制" class="headerlink" title="TCP拥塞控制"></a>TCP拥塞控制</h2><p><img src="/image-20240312202914595.png"></p>
+<ol>
+<li><p><strong>慢启动（Slow Start）</strong>：</p>
+<ul>
+<li>在TCP连接建立或拥塞恢复时，慢启动算法将初始的拥塞窗口设置为1个报文段大小，并且每当收到一个确认就将窗口大小加倍，从而实现指数级的增长。</li>
+</ul>
+</li>
+<li><p><strong>拥塞避免（Congestion Avoidance）</strong>：</p>
+<ul>
+<li>当拥塞窗口大小达到慢启动阈值（ssthresh）时，TCP会进入拥塞避免状态。在拥塞避免状态下，拥塞窗口以线性增长的方式增加，每当一个往返时间（RTT）过去时，拥塞窗口增加一个报文段大小。</li>
+</ul>
+</li>
+<li><p><strong>快重传（Fast Retransmit）</strong>：</p>
+<ul>
+<li>如果发送方接收到对同一个数据包的三个重复的ACK确认，它会认为这个数据包已经丢失，并立即重传该数据包，而不必等待超时。</li>
+</ul>
+</li>
+<li><p><strong>快恢复（Fast Recovery）</strong>：</p>
+<ul>
+<li>当发送方收到三个重复的ACK时，它会将拥塞窗口减半（而不是将其设置为1，这与慢启动不同），并将慢启动阈值设置为当前拥塞窗口的一半。接着，它进入快速恢复状态，在此状态下，拥塞窗口每收到一个 ACK 就增加一个报文段大小，而不是每次加倍，这相对于慢启动算法来说是一种更加保守的方法。</li>
+</ul>
+</li>
+</ol>
+<p>拥塞检测并没有单独的算法，它是快重传和快恢复算法的一部分，在出现丢失的数据包时，通过快速重传和快速恢复算法来尽快检测并纠正拥塞。</p>
+<h2 id="TCP超时重传时间选择"><a href="#TCP超时重传时间选择" class="headerlink" title="TCP超时重传时间选择"></a>TCP超时重传时间选择</h2><p><strong>RTO</strong>代表重传超时时间（Retransmission TimeOut），是TCP协议中的一个重要概念。它表示在发送数据后等待确认（ACK）的时间超过RTO时，发送方认为数据丢失，并触发重传机制，重新发送未确认的数据。<br><strong>最近的样本RTT（Sample RTT）</strong>：发送方在收到数据的确认时记录下来的往返时间（RTT）的样本值。<br><strong>偏差RTT（Deviation RTT）</strong>：样本RTT与平均RTT之间的偏差，用于估计RTT的波动情况。</p>
+<p><img src="/image-20240312203808983.png"></p>
+<h1 id="常见面试问题"><a href="#常见面试问题" class="headerlink" title="常见面试问题"></a>常见面试问题</h1><h2 id="TCP连接建立后客户机突然宕机了怎么办？"><a href="#TCP连接建立后客户机突然宕机了怎么办？" class="headerlink" title="TCP连接建立后客户机突然宕机了怎么办？"></a>TCP连接建立后客户机突然宕机了怎么办？</h2><p>TCP Keep-Alive是一种TCP协议的扩展机制，用于检测TCP连接的存活状态。它通过在连接空闲时定期向对方发送探测报文来检测连接的存活性，以防止连接因为长时间的空闲而被网络设备或中间节点关闭。</p>
+<p>TCP Keep-Alive的工作原理如下：</p>
+<ol>
+<li><p><strong>定时发送探测报文</strong>：一旦TCP连接空闲超过一定的时间阈值，TCP Keep-Alive机制就会启动。发送方会定期向对方发送特殊的Keep-Alive探测报文，以确认对方是否仍然处于活动状态。</p>
+</li>
+<li><p><strong>等待对方响应</strong>：发送方发送Keep-Alive探测报文后，会等待一定的时间来等待对方的响应。如果对方没有响应，则表示连接可能已经失效。</p>
+</li>
+<li><p><strong>关闭连接</strong>：如果在一定的等待时间内没有收到对方的响应，发送方就会认为连接已经失效，并关闭连接释放资源。这样可以及时清除无效的连接，避免资源的浪费。</p>
+</li>
+</ol>
+<p>TCP Keep-Alive的参数可以由操作系统或应用程序设置，包括Keep-Alive探测报文的发送间隔、空闲连接超时时间和最大尝试次数等。这些参数可以根据具体的应用场景和网络环境进行调整，以平衡连接的可靠性和性能开销。</p>
+<p>保活计时器是TCP Keep-Alive机制中的一个关键组成部分，用于控制发送Keep-Alive探测报文的定时发送和超时等待。保活计时器通常由操作系统维护，它会在TCP连接空闲一定时间后启动，并定期发送Keep-Alive探测报文。如果在一定的时间内没有收到对方的响应，保活计时器会触发连接的关闭。</p>
+</div><div class="article-licensing box"><div class="licensing-title"><p>TCP</p><p><a href="https://suliemnn.github.io/TCP/">https://suliemnn.github.io/TCP/</a></p></div><div class="licensing-meta level is-mobile"><div class="level-left"><div class="level-item is-narrow"><div><h6>作者</h6><p>适彼乐土</p></div></div><div class="level-item is-narrow"><div><h6>发布于</h6><p>2024-03-12</p></div></div><div class="level-item is-narrow"><div><h6>更新于</h6><p>2024-03-12</p></div></div><div class="level-item is-narrow"><div><h6>许可协议</h6><p><a class="icons" rel="noopener" target="_blank" title="Creative Commons" href="https://creativecommons.org/"><i class="icon fab fa-creative-commons"></i></a><a class="icons" rel="noopener" target="_blank" title="Attribution" href="https://creativecommons.org/licenses/by/4.0/"><i class="icon fab fa-creative-commons-by"></i></a><a class="icons" rel="noopener" target="_blank" title="Noncommercial" href="https://creativecommons.org/licenses/by-nc/4.0/"><i class="icon fab fa-creative-commons-nc"></i></a></p></div></div></div></div></div><div class="notification is-danger">You need to set <code>install_url</code> to use ShareThis. Please set it in <code>_config.yml</code>.</div></article></div><div class="card"><div class="card-content"><h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3><div class="buttons is-centered"><a class="button donate" href="/" target="_blank" rel="noopener" data-type="afdian"><span class="icon is-small"><i class="fas fa-charging-station"></i></span><span>爱发电</span></a><a class="button donate" data-type="alipay"><span class="icon is-small"><i class="fab fa-alipay"></i></span><span>支付宝</span><span class="qrcode"><img src="/" alt="支付宝"></span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="buymeacoffee"><span class="icon is-small"><i class="fas fa-coffee"></i></span><span>送我杯咖啡</span></a><a class="button donate" href="/" target="_blank" rel="noopener" data-type="patreon"><span class="icon is-small"><i class="fab fa-patreon"></i></span><span>Patreon</span></a><div class="notification is-danger">You forgot to set the <code>business</code> or <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.</div><a class="button donate" data-type="wechat"><span class="icon is-small"><i class="fab fa-weixin"></i></span><span>微信</span><span class="qrcode"><img src="/" alt="微信"></span></a></div></div></div><nav class="post-navigation mt-4 level is-mobile"><div class="level-start"><a class="article-nav-prev level level-item link-muted" href="/UDP/"><i class="level-item fas fa-chevron-left"></i><span class="level-item">UDP</span></a></div><div class="level-end"><a class="article-nav-next level level-item link-muted" href="/Weekly-Study-Plan/"><span class="level-item">每周学习打卡！</span><i class="level-item fas fa-chevron-right"></i></a></div></nav><div class="card"><div class="card-content"><h3 class="title is-5">评论</h3><div class="notification is-danger">You forgot to set the <code>shortname</code> for Disqus. Please set it in <code>_config.yml</code>.</div></div></div></div><!--!--><div class="column column-right is-4-tablet is-4-desktop is-4-widescreen  order-3 is-sticky"><!--!--><div class="card widget" data-type="recent-posts"><div class="card-content"><h3 class="menu-label">最新文章</h3><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-03-12T08:28:14.000Z">2024-03-12</time></p><p class="title"><a href="/UDP/">UDP</a></p><p class="categories"><a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a> / <a href="/categories/%E6%8A%80%E6%9C%AF/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a> / <a href="/categories/%E6%8A%80%E6%9C%AF/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82/">运输层</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-03-12T08:28:03.000Z">2024-03-12</time></p><p class="title"><a href="/TCP/">TCP</a></p><p class="categories"><a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a> / <a href="/categories/%E6%8A%80%E6%9C%AF/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a> / <a href="/categories/%E6%8A%80%E6%9C%AF/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/%E8%BF%90%E8%BE%93%E5%B1%82/">运输层</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-03-04T16:54:38.000Z">2024-03-05</time></p><p class="title"><a href="/Weekly-Study-Plan/">每周学习打卡！</a></p><p class="categories"><a href="/categories/%E7%94%9F%E6%B4%BB/">生活</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-03-03T04:06:15.000Z">2024-03-03</time></p><p class="title"><a href="/BloomFilter/">自定义实现布隆过滤器</a></p><p class="categories"><a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a> / <a href="/categories/%E6%8A%80%E6%9C%AF/%E4%BB%A3%E7%A0%81%E5%A4%8D%E7%8E%B0/">代码复现</a></p></div></article><article class="media"><div class="media-content"><p class="date"><time dateTime="2024-02-09T16:18:58.000Z">2024-02-10</time></p><p class="title"><a href="/S-AES/">S-AES加密算法</a></p><p class="categories"><a href="/categories/%E6%8A%80%E6%9C%AF/">技术</a> / <a href="/categories/%E6%8A%80%E6%9C%AF/%E4%BB%A3%E7%A0%81%E5%A4%8D%E7%8E%B0/">代码复现</a></p></div></article></div></div></div></div></div></section><footer class="footer"><div class="container"><div class="level"><div class="level-start"><a class="footer-logo is-block mb-2" href="/"><img src="/img/logo.svg" alt="适彼乐土的随想空间" height="28"></a><p class="is-size-7"><span>&copy; 2024 适彼乐土</span>  Powered by <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> &amp; <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank" rel="noopener">Icarus</a></p><p class="is-size-7">© 2019</p></div><div class="level-end"><div class="field has-addons"><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Creative Commons" href="https://creativecommons.org/"><i class="fab fa-creative-commons"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/"><i class="fab fa-creative-commons-by"></i></a></p><p class="control"><a class="button is-transparent is-large" target="_blank" rel="noopener" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus"><i class="fab fa-github"></i></a></p></div></div></div></div></footer><script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script><script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script><script>moment.locale("zh-cn");</script><script>var IcarusThemeSettings = {
+            article: {
+                highlight: {
+                    clipboard: true,
+                    fold: 'unfolded'
+                }
+            }
+        };</script><script src="/js/column.js"></script><script src="/js/animation.js"></script><a id="back-to-top" title="回到顶端" href="javascript:;"><i class="fas fa-chevron-up"></i></a><script src="/js/back_to_top.js" defer></script><!--!--><!--!--><!--!--><script src="https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.js" defer></script><script>window.addEventListener("load", () => {
+      window.cookieconsent.initialise({
+        type: "info",
+        theme: "edgeless",
+        static: false,
+        position: "bottom-left",
+        content: {
+          message: "此网站使用Cookie来改善您的体验。",
+          dismiss: "知道了！",
+          allow: "允许使用Cookie",
+          deny: "拒绝",
+          link: "了解更多",
+          policy: "Cookie政策",
+          href: "https://www.cookiesandyou.com/",
+        },
+        palette: {
+          popup: {
+            background: "#edeff5",
+            text: "#838391"
+          },
+          button: {
+            background: "#4b81e8"
+          },
+        },
+      });
+    });</script><script src="https://cdn.jsdelivr.net/npm/lightgallery@1.10.0/dist/js/lightgallery.min.js" defer></script><script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.8.1/dist/js/jquery.justifiedGallery.min.js" defer></script><script>window.addEventListener("load", () => {
+            if (typeof $.fn.lightGallery === 'function') {
+                $('.article').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof $.fn.justifiedGallery === 'function') {
+                if ($('.justified-gallery > p > .gallery-item').length) {
+                    $('.justified-gallery > p > .gallery-item').unwrap();
+                }
+                $('.justified-gallery').justifiedGallery();
+            }
+        });</script><!--!--><!--!--><!--!--><!--!--><!--!--><script src="/js/main.js" defer></script><div class="searchbox"><div class="searchbox-container"><div class="searchbox-header"><div class="searchbox-input-container"><input class="searchbox-input" type="text" placeholder="想要查找什么..."></div><a class="searchbox-close" href="javascript:;">×</a></div><div class="searchbox-body"></div></div></div><script src="/js/insight.js" defer></script><script>document.addEventListener('DOMContentLoaded', function () {
+            loadInsight({"contentUrl":"/content.json"}, {"hint":"想要查找什么...","untitled":"(无标题)","posts":"文章","pages":"页面","categories":"分类","tags":"标签"});
+        });</script></body></html>
